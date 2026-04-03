@@ -1,0 +1,20 @@
+{
+  "instance_pool_name": "data-platform-spot-pool",
+  "node_type_id": "m5.large",
+  "min_idle_instances": 0,
+  "max_capacity": 10,
+  "idle_instance_autotermination_minutes": 10,
+  "aws_attributes": {
+    "availability": "SPOT_WITH_FALLBACK",
+    "zone_id": "auto",
+    "spot_bid_price_percent": 100
+  },
+  "custom_tags": {
+    "App": "data-platform",
+    "Env": "prod",
+    "CostCenter": "1234"
+  },
+  "preloaded_spark_versions": [
+    "14.3.x-scala2.12"
+  ]
+}

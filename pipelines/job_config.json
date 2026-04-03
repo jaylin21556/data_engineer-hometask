@@ -1,0 +1,56 @@
+{
+  "name": "ingest-baseball-csvs",
+  "tags": {
+    "App": "data-platform",
+    "Owner": "eng-data"
+  },
+  "schedule": {
+    "quartz_cron_expression": "0 0 6 * * ?",
+    "timezone_id": "America/New_York",
+    "pause_status": "UNPAUSED"
+  },
+  "tasks": [
+    {
+      "task_key": "ingest_csvs_to_delta",
+      "description": "Ingest 5 baseball CSV files from S3 landing to curated Delta tables",
+      "notebook_task": {
+        "notebook_path": "/Repos/data-platform/pipelines/ingest_baseball_data",
+        "base_parameters": {
+          "landing_path": "s3://data-platform-prod-landing/raw/",
+          "curated_path": "s3://data-platform-prod-curated/baseball/"
+        }
+      },
+      "new_cluster": {
+        "spark_version": "14.3.x-scala2.12",
+        "node_type_id": "m5.large",
+        "num_workers": 2,
+        "instance_pool_id": "data-platform-spot-pool",
+        "aws_attributes": {
+          "availability": "SPOT_WITH_FALLBACK"
+        },
+        "custom_tags": {
+          "App": "data-platform",
+          "CostCenter": "1234"
+        }
+      },
+      "timeout_seconds": 1800,
+      "max_retries": 2,
+      "min_retry_interval_millis": 60000,
+      "retry_on_timeout": true
+    }
+  ],
+  "email_notifications": {
+    "on_failure": ["data-team@example.com"],
+    "on_start": [],
+    "on_success": [],
+    "no_alert_for_skipped_runs": true
+  },
+  "webhook_notifications": {
+    "on_failure": [
+      {
+        "id": "slack-webhook-placeholder"
+      }
+    ]
+  },
+  "max_concurrent_runs": 1
+}
